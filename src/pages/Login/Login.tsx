@@ -1,73 +1,126 @@
-import { Card, CardBody, Button, Flex, FormControl, FormLabel, Input, Icon } from "@chakra-ui/react";
+import { Card, CardBody, Button, Flex, FormControl, FormLabel, Input, Icon, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 
 import { PiUserSwitchBold } from 'react-icons/pi';
 import { MyButton } from "../../components/MyButton/Mybutton";
 
+interface ErrorResponse {
+    response: {
+        data: {
+            mensagem: string;
+            status: number;
+            success: boolean;
+        };
+    };
+}
+
 export function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleLogin() {
+        setIsLoading(true);
+
         try {
             const response = await axios.post("http://localhost:3000/login", {
                 email: email,
                 senha: password,
 
             });
+            setMessage(`${response.data.message}`);
+            //setIsLoading(false);
         } catch (error) {
-            console.log("Ocorreu um erro: ", error);
+            const err: ErrorResponse = error as ErrorResponse;
+            console.log("Ocorreu um erro: ", err);
+            setMessage(`Erro: ${err.response.data.mensagem} com o código ${err.response.data.status}`);
+            //setIsLoading(false);
+
+        } finally {
+            setTimeout(() => {
+                setIsLoading(false);
+
+            }, 2000); // 1000 = 1 segundo.
 
         }
 
     }
 
-    function showText() {
-        console.log('apertei o botão teste...');
-    }
-
     function clearForm() {
         setEmail('');
         setPassword('');
+        setMessage ('');
     }
 
     return (
 
         <>
-            <Card p={8} rounded={15} bg={'blackAlpha.400'}>
-                <CardBody>
+            {
+                isLoading ?
+                    <>
+                        <Flex>
+                            <Text
+                                fontSize={'1.25rem'}
+                                fontWeight={'bold'}
+                                color={'whiteAlpha.700'}
+                            >
+                                Loading, please wait!
+                            </Text>
+                        </Flex>
+                    </> :
 
-                    <Flex justify={'center'} mb={8}>
-                        <Icon as={PiUserSwitchBold} color={'purple.500'} boxSize={50} />
+                    <Card p={8} rounded={15} bg={'blackAlpha.400'}>
+                        <CardBody>
 
-                    </Flex>
+                            {message ? (
+                                <Flex mb={8} justify={'center'} width={'100%'}>
+                                    <Text
+                                        p={'1rem'}
+                                        border={'1px'}
+                                        px={'2rem'}
+                                        rounded={6}
+                                        fontSize={'1.25rem'}
+                                        fontWeight={'bold'}
+                                        bg={'red.700'}
+                                        color={'whiteAlpha.700'}>
+                                        {message}
+                                    </Text>
+                                </Flex>
+                            ) : <></>}
 
-                    <Flex flexDir={"column"} gap={6}>
+                            <Flex justify={'center'} mb={8}>
+                                <Icon as={PiUserSwitchBold} color={'purple.500'} boxSize={50} />
 
-                        <FormControl>
-                            <FormLabel fontSize={'20'} color={'purple.300'}>
-                                Email
-                            </FormLabel>
-                            <Input placeholder='E-mail' color={'blue.500'} bg={'ActiveCaption'} value={email} onChange={(event) => setEmail(event.target.value)} />
-                        </FormControl>
+                            </Flex>
 
-                        <FormControl>
-                            <FormLabel fontSize={'20'} color={'purple.300'}>
-                                Senha
-                            </FormLabel>
-                            <Input type="" placeholder='Senha' color={'blue.500'} bg={'ActiveCaption'} value={password} onChange={(event) => setPassword(event.target.value)} />
-                        </FormControl>
+                            <Flex flexDir={"column"} gap={6}>
 
-                        <MyButton buttonText = "Acessar" myColorScheme="red" myOnClick={handleLogin}/>
-                        <MyButton buttonText = "Cadastrar" myColorScheme="blue"/>
-                        <MyButton buttonText = "Limpar" myColorScheme="yellow" myOnClick={clearForm}/>
+                                <FormControl>
+                                    <FormLabel fontSize={'20'} color={'purple.300'}>
+                                        Email
+                                    </FormLabel>
+                                    <Input placeholder='E-mail' color={'blue.500'} bg={'ActiveCaption'} value={email} onChange={(event) => setEmail(event.target.value)} />
+                                </FormControl>
 
-                    </Flex>
-                </CardBody>
-            </Card>
+                                <FormControl>
+                                    <FormLabel fontSize={'20'} color={'purple.300'}>
+                                        Senha
+                                    </FormLabel>
+                                    <Input type="" placeholder='Senha' color={'blue.500'} bg={'ActiveCaption'} value={password} onChange={(event) => setPassword(event.target.value)} />
+                                </FormControl>
 
+                                <MyButton buttonText="Acessar" myColorScheme="red" myOnClick={handleLogin} />
+                                <MyButton buttonText="Cadastrar" myColorScheme="blue" />
+                                <MyButton buttonText="Limpar" myColorScheme="yellow" myOnClick={clearForm} />
+
+                            </Flex>
+                        </CardBody>
+                    </Card>
+
+            }
         </>
     )
 }

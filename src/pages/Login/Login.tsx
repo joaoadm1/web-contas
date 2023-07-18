@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 
 import { PiUserSwitchBold } from 'react-icons/pi';
+import { MyButton } from "../../components/MyButton/Mybutton";
 
 export function Login() {
 
@@ -21,6 +22,15 @@ export function Login() {
 
         }
 
+    }
+
+    function showText() {
+        console.log('apertei o botão teste...');
+    }
+
+    function clearForm() {
+        setEmail('');
+        setPassword('');
     }
 
     return (
@@ -50,9 +60,9 @@ export function Login() {
                             <Input type="" placeholder='Senha' color={'blue.500'} bg={'ActiveCaption'} value={password} onChange={(event) => setPassword(event.target.value)} />
                         </FormControl>
 
-                        <Button onClick={handleLogin} colorScheme='purple'>
-                            ACESSAR
-                        </Button>
+                        <MyButton buttonText = "Acessar" myColorScheme="red" myOnClick={handleLogin}/>
+                        <MyButton buttonText = "Cadastrar" myColorScheme="blue"/>
+                        <MyButton buttonText = "Limpar" myColorScheme="yellow" myOnClick={clearForm}/>
 
                     </Flex>
                 </CardBody>

@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Link, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { Login } from "./pages/Login/Login";
 import { BrowserRouter, Link as LinkRouter} from "react-router-dom";
+import { Login } from "./pages/Login/Login";
 import { Router } from "./routes/router";
 
 

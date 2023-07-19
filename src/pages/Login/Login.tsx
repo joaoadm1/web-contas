@@ -1,6 +1,6 @@
 import { Card, CardBody, Button, Flex, FormControl, FormLabel, Input, Icon, Text } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PiUserSwitchBold } from 'react-icons/pi';
 import { MyButton } from "../../components/MyButton/Mybutton";
@@ -59,6 +59,14 @@ export function Login({changeIsLogged}: LoginProps) {
         setPassword('');
         setMessage ('');
     }
+
+    useEffect( () => {
+        console.log('chamou o useEffect com array vazio...');
+    }, [])
+
+    //useEffect( () => {
+    //    console.log('chamou o useEffect sem array...');
+    //})
 
     return (
 

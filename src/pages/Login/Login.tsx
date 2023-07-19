@@ -15,7 +15,11 @@ interface ErrorResponse {
     };
 }
 
-export function Login() {
+interface LoginProps {
+    changeIsLogged: (value: boolean) => void;
+}
+
+export function Login({changeIsLogged}: LoginProps) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,6 +36,7 @@ export function Login() {
 
             });
             setMessage(`${response.data.message}`);
+            changeIsLogged(true);
             //setIsLoading(false);
         } catch (error) {
             const err: ErrorResponse = error as ErrorResponse;
